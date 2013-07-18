@@ -1,0 +1,102 @@
+#+TITLE:     Elastic Beanstalk
+#+AUTHOR:    Felipe Reyes
+#+EMAIL:     freyes@tty.cl
+#+DATE:      18.07.2013
+#+DESCRIPTION:
+#+KEYWORDS:  python, aws, elastic beanstalk
+#+OPTIONS:   H:3 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:nil mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+LaTeX_CLASS: beamer
+#+BEAMER_HEADER_EXTRA: \usetheme{Madrid}\usecolortheme{default}
+#+MACRO: BEAMERMODE presentation
+#+MACRO: BEAMERINSTITUTE AWS SCL User Group
+#+BEAMER_FRAME_LEVEL: 2
+#+STARTUP: beamer
+
+* Deploying with Elastic Beanstalk
+
+** Que es EB?
+   - EB -> Elastic Beanstalk
+   - PaaS -> Platform as a Service
+   - Otros servicios similares: [[https://developers.google.com/appengine/][Google App Engine]], [[https://www.heroku.com/][Heroku]], [[http://openshift.redhat.com/][OpenShift]]
+
+** Workflow
+   - Crear aplicacion
+   - Crear environment
+   - Seleccionar un stack (por ejemplo: python 2.7 en 64 bits)
+   - (opcional) Crear un base de datos RDS
+
+** Highlights
+   - Multiples lenguajes de programacion soportados (tomcat/java, PHP, Python, Node.js, Ruby, .NET)
+   - Integracion con RDS, S3, Elastic Load Balancing, Auto Scaling
+   - No hay un pago extra por el servicio, solamente se paga por los recursos usados (EC2, S3, RDS, etc).
+   - Definir alarmas
+   - Snapshot de logs de las instancias EC2 son almacenados en S3
+
+** Cosas que me perturban
+   - Usa Apache para Java (tomcat), php, python
+   - Usa Amazon Linux (basada en RHEL)
+   - 
+
+** Control Panel (1)
+
+#+LaTeX:\includegraphics[width=300px]{/home/freyes/Projects/flask-hello-world/slides/imgs/beanstalk_new_env_dashboard_1.png}
+
+** Control Panel (2)
+
+#+LaTeX:\includegraphics[width=300px]{/home/freyes/Projects/flask-hello-world/slides/imgs/beanstalk_new_monitoring_1.png}
+
+** Control Panel (3)
+
+#+LaTeX:\includegraphics[width=300px]{/home/freyes/Projects/flask-hello-world/slides/imgs/beanstalk_new_alarms_1.png}
+
+** Control Panel (4)
+
+#+LaTeX:\includegraphics[width=300px]{/home/freyes/Projects/flask-hello-world/slides/imgs/beanstalk_new_vpc_management_1.png}
+
+* Ejemplos
+
+** Crear una aplicacion y ambiente
+#+BEGIN_LaTeX
+\begin{lstlisting}[language=shell]
+eb init  # crear aplicacion/environment/rds/etc
+eb start  # instala la aplicacion
+eb status  --verbose
+
+# actualizar app despues de haber hecho commit (1 o mas)
+git aws.push
+
+# para terminar
+eb stop  # liberar los recursos y no seguir gastando $_$
+eb delete
+\end{lstlisting}
+#+END_LaTeX
+
+** Ejemplo de uso de RDS
+#+BEGIN_LaTeX
+\begin{lstlisting}[language=python]
+import os 
+ 
+if 'RDS_HOSTNAME' in os.environ:
+    DB_URI = "mysql://%(USER)s:%(PASSWORD)s@%(HOST)s:%(PORT)s/%(NAME)s" % \
+             {'NAME': os.environ['RDS_DB_NAME'],
+              'USER': os.environ['RDS_USERNAME'],
+              'PASSWORD': os.environ['RDS_PASSWORD'],
+              'HOST': os.environ['RDS_HOSTNAME'],
+              'PORT': os.environ['RDS_PORT']}
+    }
+else:
+    DB_URI = "sqlite:///"
+\end{lstlisting}
+#+END_LaTeX
+
+
+* Referencias
+** Referencias
+   - [[https://aws.amazon.com/elasticbeanstalk/][AWS Elastic Beanstalk]]
+   - [[http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html][What Is AWS Elastic Beanstalk and Why Do I Need It?]]
