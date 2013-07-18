@@ -5,20 +5,20 @@ from flask import Flask
 
 
 # create our little application :)
-app = Flask(__name__)
-app.config["DEBUG"] = True
-app.config["SECRET_KEY"] = 'development key'
+application = Flask(__name__)
+application.config["DEBUG"] = True
+application.config["SECRET_KEY"] = 'development key'
 
 
-@app.route("/")
+@application.route("/")
 def index():
     return "hello world"
 
 
-@app.route("/pyinfo")
+@application.route("/pyinfo")
 def info():
     return pyinfo()
 
 
 if __name__ == "__main__":
-    app.run()
+    application.run(host='0.0.0.0', debug=True)

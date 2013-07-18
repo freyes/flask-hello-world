@@ -8,4 +8,4 @@ setup(name='flask-hello-world',
       author='Felipe Reyes',
       author_email='freyes@tty.cl',
       url='https://github.com/freyes/flask-hello-world/',
-      py_modules = ["hello", "pyinfo"])
+      py_modules = ["application", "pyinfo"])
