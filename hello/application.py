@@ -2,25 +2,21 @@
 import sqlite3
 import hashlib
 from pyinfo import pyinfo
-from flask import Flask
+from flask import Flask, render_template, request, redirect
+from hello.core import app
+from hello.models import TodoItem, db
 
 
-# create our little application :)
-application = Flask(__name__)
-application.config["DEBUG"] = True
-application.config["SECRET_KEY"] = 'development key'
-
-
-@application.route("/")
+@app.route("/")
 def index():
     return "hello world"
 
 
-@application.route("/pyinfo")
+@app.route("/pyinfo")
 def info():
     return pyinfo()
 
-@application.route("/sha1/<foo>/<n>")
+@app.route("/sha1/<foo>/<n>")
 def calculate_sha1(foo, n):
     output = foo
     for i in range(max(1, int(n))):
@@ -28,6 +24,21 @@ def calculate_sha1(foo, n):
 
     return output
 
+@app.route("/todo")
+def list_todo():
+    return render_template("list_todo.djhtml", todos=TodoItem.query.all())
+
+
+@app.route("/todo/new", methods=["GET", "POST"])
+def new_todo():
+    if request.method == "GET":
+        return render_template("new_todo.djhtml")
+
+    t = TodoItem(request.form["todo_title"])
+    db.session.add(t)
+    db.session.commit()
+    return redirect("/todo", 302)
+
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True)

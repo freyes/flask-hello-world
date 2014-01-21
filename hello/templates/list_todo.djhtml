@@ -1,0 +1,24 @@
+{% extends "base.djhtml" %}
+
+{% block content %}
+
+  <h2>TODOs</h2>
+  <a href="/todo/new" class="btn btn-primary">New</a>
+  <table class="table table-striped">
+    <tbody class="table-striped">
+      {% for item in todos %}
+        <tr>
+          <td>
+            {{ item.created_at.strftime('%H:%M') }}
+          </td>
+          <td>
+            <div class="todo">
+              <div class="todo-title">{{ item.title }}</div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

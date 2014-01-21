@@ -1,0 +1,10 @@
+{% extends "base.djhtml" %}
+
+{% block content %}
+
+  <form method="POST">
+    <label for="todo_title">Title</label>
+    <input type="text" name="todo_title" id="todo_title" />
+    <input type="submit" value="Save" />
+  </form>
+{% endblock %}
